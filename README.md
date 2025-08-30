@@ -1,43 +1,24 @@
-# Hex Flower Weather App
+# Weather Flower App
 
-A Flask web application that displays a hex flower grid for randomized weather generation or other RPG systems.
-
-## Setup Instructions
-
-1. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-
-2. Run the application:
-   ```
-   python app.py
-   ```
-
-3. Open your browser and navigate to:
-   ```
-   http://127.0.0.1:5000/
-   ```
+A Flask web application that generates random weather using hex flower mechanics for tabletop RPGs.
 
 ## Features
 
-- Interactive hex flower grid visualization
-- Manual selection of state
-- Random transitions based on probability 
-- Reset functionality to return to the default state
-- Visual indication of the current active cell
+- Interactive hex flower grid for weather generation
+- Multiple climate types (cool, temperate, hot, etc.)
+- Seasonal variations
+- Detailed weather descriptions with mechanical effects
+- Dark/light theme support
+- Configurable via YAML
+- Ready for containerized deployment
 
-## Customization
+## Local Development
 
-You can customize the state descriptions in the `app.py` file by modifying the `DEFAULT_STATES` dictionary.
+### Prerequisites
+- Python 3.13+
+- pip
 
-## How It Works
-
-The application uses:
-- Flask for the backend web server
-- HTML, CSS, and JavaScript for the frontend visualization
-- The `hexFlower.py` class for the hex flower logic
-
-## License
-
-This project is open source and available for use in your RPG campaigns.
+### Setup
+```bash
+pip install -r [requirements.txt](http://_vscodecontentref_/2)
+python [app.py](http://_vscodecontentref_/3) --env development
