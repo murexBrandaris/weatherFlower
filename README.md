@@ -6,11 +6,6 @@ A Flask web application that generates random weather using hex flower mechanics
 
 - **Interactive Hex Flower Grid**: Click-to-navigate weather generation system
 - **Multiple Climate Types**: Cool, temperate, hot climates with seasonal variations
-- **Rich Weather Descriptions**: Detailed narrative descriptions with optional mechanical effects
-- **Theme Support**: Toggle between light and dark themes
-- **Configurable Environment**: YAML-based configuration with development/production modes
-- **RPG-Ready**: Designed specifically for tabletop role-playing game sessions
-- **Containerized Deployment**: Ready for cloud deployment with Docker
 
 ## Local Development
 
@@ -61,9 +56,7 @@ python app.py --help
 3. **Generate weather** by:
    - Clicking on hex cells to set specific weather
    - Using "Random Transition" for procedural generation
-   - Using "Reset" to return to center
-4. **Toggle mechanical effects** display as needed for your game system
-5. **Switch themes** using the theme toggle in the top right
+   - Using "Reset" to return to bottom cell
 
 ## Deployment
 
