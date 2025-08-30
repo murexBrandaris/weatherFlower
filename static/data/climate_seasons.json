@@ -1,0 +1,542 @@
+{
+    "cool": {
+        "name": "Cool",
+        "description": "A moderately cool, but temperate climate",
+        "seasonOrder": [
+            "spring",
+            "summer",
+            "autumn",
+            "winter"
+        ],
+        "seasons": {
+            "spring": {
+                "name": "Spring",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Intermittent Showers",
+                    "3": "Fog",
+                    "4": "Intermittent Showers",
+                    "5": "Occasional Sunshine",
+                    "6": "Light Showers",
+                    "7": "Dark Clouds",
+                    "8": "Fog",
+                    "9": "Overcast",
+                    "10": "Overcast",
+                    "11": "Downpour",
+                    "12": "Occasional Sunshine",
+                    "13": "Heavy Showers",
+                    "14": "Clear Skies",
+                    "15": "Overcast",
+                    "16": "Hail",
+                    "17": "Clear Skies",
+                    "18": "Snow",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "summer": {
+                "name": "Summer",
+                "states": {
+                    "1": "Overcast",
+                    "2": "Occasional Sunshine",
+                    "3": "Fog",
+                    "4": "Intermittent Showers",
+                    "5": "Overcast",
+                    "6": "Light Showers",
+                    "7": "Occasional Sunshine",
+                    "8": "Light Showers",
+                    "9": "Clear Skies",
+                    "10": "Intermittent Showers",
+                    "11": "Heavy Showers",
+                    "12": "Clear Skies",
+                    "13": "Dark Clouds",
+                    "14": "Clear Skies",
+                    "15": "Overcast",
+                    "16": "Downpour",
+                    "17": "Heatwave",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "autumn": {
+                "name": "Autumn",
+                "states": {
+                    "1": "Occasional Sunshine",
+                    "2": "Fog",
+                    "3": "Dark Clouds",
+                    "4": "Intermittent Showers",
+                    "5": "Overcast",
+                    "6": "Thunderstorm",
+                    "7": "Intermittent Showers",
+                    "8": "Dark Clouds",
+                    "9": "Clear Skies",
+                    "10": "Fog",
+                    "11": "Downpour",
+                    "12": "Occasional Sunshine",
+                    "13": "Heavy Showers",
+                    "14": "Clear Skies",
+                    "15": "Cold Snap",
+                    "16": "Hail",
+                    "17": "Heatwave",
+                    "18": "Blizzard",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "winter": {
+                "name": "Winter",
+                "states": {
+                    "1": "Intermittent Showers",
+                    "2": "Fog",
+                    "3": "Dark Clouds",
+                    "4": "Intermittent Showers",
+                    "5": "Overcast",
+                    "6": "Cold Snap",
+                    "7": "Overcast",
+                    "8": "Hail",
+                    "9": "Clear Skies",
+                    "10": "Light Showers",
+                    "11": "Snow",
+                    "12": "Clear Skies",
+                    "13": "Snow",
+                    "14": "Occasional Sunshine",
+                    "15": "Cold Snap",
+                    "16": "Snow",
+                    "17": "Heavy Showers",
+                    "18": "Blizzard",
+                    "19": "Strange Phenomena"
+                }
+            }
+        }
+    },
+    "warm": {
+        "name": "Warm",
+        "description": "A moderately warm climate with mostly temperate conditions",
+        "seasonOrder": [
+            "spring",
+            "summer",
+            "autumn",
+            "winter"
+        ],
+        "seasons": {
+            "spring": {
+                "name": "Spring",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Intermittent Showers",
+                    "3": "Fog",
+                    "4": "Intermittent Showers",
+                    "5": "Occasional Sunshine",
+                    "6": "Dark Clouds",
+                    "7": "Dark Clouds",
+                    "8": "Fog",
+                    "9": "Overcast",
+                    "10": "Overcast",
+                    "11": "Light Showers",
+                    "12": "Occasional Sunshine",
+                    "13": "Heavy Showers",
+                    "14": "Clear Skies",
+                    "15": "Fog",
+                    "16": "Thunderstorm",
+                    "17": "Clear Skies",
+                    "18": "Downpour",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "summer": {
+                "name": "Summer",
+                "states": {
+                    "1": "Overcast",
+                    "2": "Occasional Sunshine",
+                    "3": "Fog",
+                    "4": "Intermittent Showers",
+                    "5": "Overcast",
+                    "6": "Light Showers",
+                    "7": "Occasional Sunshine",
+                    "8": "Intermittent Showers",
+                    "9": "Clear Skies",
+                    "10": "Clear Skies",
+                    "11": "Dark Clouds",
+                    "12": "Heatwave",
+                    "13": "Dark Clouds",
+                    "14": "Heatwave",
+                    "15": "Overcast",
+                    "16": "Downpour",
+                    "17": "Heatwave",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "autumn": {
+                "name": "Autumn",
+                "states": {
+                    "1": "Occasional Sunshine",
+                    "2": "Fog",
+                    "3": "Fog",
+                    "4": "Intermittent Showers",
+                    "5": "Dark Clouds",
+                    "6": "Light Showers",
+                    "7": "Intermittent Showers",
+                    "8": "Dark Clouds",
+                    "9": "Clear Skies",
+                    "10": "Light Showers",
+                    "11": "Light Showers",
+                    "12": "Clear Skies",
+                    "13": "Heavy Showers",
+                    "14": "Overcast",
+                    "15": "Heatwave",
+                    "16": "Downpour",
+                    "17": "Occasional Sunshine",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "winter": {
+                "name": "Winter",
+                "states": {
+                    "1": "Light Showers",
+                    "2": "Fog",
+                    "3": "Dark Clouds",
+                    "4": "Intermittent Showers",
+                    "5": "Dark Clouds",
+                    "6": "Intermittent Showers",
+                    "7": "Overcast",
+                    "8": "Dark Clouds",
+                    "9": "Clear Skies",
+                    "10": "Intermittent Showers",
+                    "11": "Snow",
+                    "12": "Clear Skies",
+                    "13": "Hail",
+                    "14": "Occasional Sunshine",
+                    "15": "Cold Snap",
+                    "16": "Snow",
+                    "17": "Heavy Showers",
+                    "18": "Blizzard",
+                    "19": "Strange Phenomena"
+                }
+            }
+        }
+    },
+    "boreal": {
+        "name": "Boreal",
+        "description": "A climate characterized by low precipitation and even lower temperatures",
+        "seasonOrder": [
+            "spring",
+            "summer",
+            "autumn",
+            "winter"
+        ],
+        "seasons": {
+            "spring": {
+                "name": "Spring",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Overcast",
+                    "3": "Dark Clouds",
+                    "4": "Fog",
+                    "5": "Occasional Sunshine",
+                    "6": "Light Showers",
+                    "7": "Clear Skies",
+                    "8": "Overcast",
+                    "9": "Clear Skies",
+                    "10": "Cold Snap",
+                    "11": "Light Showers",
+                    "12": "Clear Skies",
+                    "13": "Snow",
+                    "14": "Clear Skies",
+                    "15": "Overcast",
+                    "16": "Hail",
+                    "17": "Cold Snap",
+                    "18": "Heavy Showers",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "summer": {
+                "name": "Summer",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Clear Skies",
+                    "3": "Occasional Sunshine",
+                    "4": "Light Showers",
+                    "5": "Occasional Sunshine",
+                    "6": "Overcast",
+                    "7": "Clear Skies",
+                    "8": "Light Showers",
+                    "9": "Clear Skies",
+                    "10": "Clear Skies",
+                    "11": "Light Showers",
+                    "12": "Clear Skies",
+                    "13": "Intermittent Showers",
+                    "14": "Clear Skies",
+                    "15": "Occasional Sunshine",
+                    "16": "Intermittent Showers",
+                    "17": "Clear Skies",
+                    "18": "Heavy Showers",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "autumn": {
+                "name": "Autumn",
+                "states": {
+                    "1": "Dark Clouds",
+                    "2": "Overcast",
+                    "3": "Dark Clouds",
+                    "4": "Intermittent Showers",
+                    "5": "Overcast",
+                    "6": "Fog",
+                    "7": "Occasional Sunshine",
+                    "8": "Light Showers",
+                    "9": "Clear Skies",
+                    "10": "Intermittent Showers",
+                    "11": "Light Showers",
+                    "12": "Clear Skies",
+                    "13": "Dark Clouds",
+                    "14": "Clear Skies",
+                    "15": "Overcast",
+                    "16": "Heavy Showers",
+                    "17": "Clear Skies",
+                    "18": "Downpour",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "winter": {
+                "name": "Winter",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Fog",
+                    "3": "Hail",
+                    "4": "Intermittent Showers",
+                    "5": "Snow",
+                    "6": "Light Showers",
+                    "7": "Intermittent Showers",
+                    "8": "Snow",
+                    "9": "Clear Skies",
+                    "10": "Overcast",
+                    "11": "Snow",
+                    "12": "Clear Skies",
+                    "13": "Occasional Sunshine",
+                    "14": "Clear Skies",
+                    "15": "Dark Clouds",
+                    "16": "Blizzard",
+                    "17": "Cold Snap",
+                    "18": "Blizzard",
+                    "19": "Strange Phenomena"
+                }
+            }
+        }
+    },
+    "tropical": {
+        "name": "Tropical",
+        "description": "A warm climate with high humidity and abundant rainfall",
+        "seasonOrder": [
+            "spring",
+            "summer",
+            "autumn",
+            "winter"
+        ],
+        "seasons": {
+            "spring": {
+                "name": "Spring",
+                "states": {
+                    "1": "Light Showers",
+                    "2": "Heavy Showers",
+                    "3": "Fog",
+                    "4": "Heavy Showers",
+                    "5": "Clear Skies",
+                    "6": "Dark Clouds",
+                    "7": "Overcast",
+                    "8": "Occasional Sunshine",
+                    "9": "Downpour",
+                    "10": "Heatwave",
+                    "11": "Clear Skies",
+                    "12": "Light Showers",
+                    "13": "Heatwave",
+                    "14": "Heavy Showers",
+                    "15": "Heavy Showers",
+                    "16": "Overcast",
+                    "17": "Downpour",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "summer": {
+                "name": "Summer",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Clear Skies",
+                    "3": "Fog",
+                    "4": "Intermittent Showers",
+                    "5": "Heatwave",
+                    "6": "Intermittent Showers",
+                    "7": "Clear Skies",
+                    "8": "Occasional Sunshine",
+                    "9": "Heatwave",
+                    "10": "Heatwave",
+                    "11": "Heavy Showers",
+                    "12": "Heatwave",
+                    "13": "Dark Clouds",
+                    "14": "Heatwave",
+                    "15": "Clear Skies",
+                    "16": "Downpour",
+                    "17": "Heatwave",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "autumn": {
+                "name": "Autumn",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Clear Skies",
+                    "3": "Fog",
+                    "4": "Intermittent Showers",
+                    "5": "Heatwave",
+                    "6": "Light Showers",
+                    "7": "Clear Skies",
+                    "8": "Occasional Sunshine",
+                    "9": "Clear Skies",
+                    "10": "Overcast",
+                    "11": "Heavy Showers",
+                    "12": "Heatwave",
+                    "13": "Dark Clouds",
+                    "14": "Heatwave",
+                    "15": "Thunderstorm",
+                    "16": "Downpour",
+                    "17": "Heatwave",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "winter": {
+                "name": "Winter",
+                "states": {
+                    "1": "Heavy Showers",
+                    "2": "Thunderstorm",
+                    "3": "Fog",
+                    "4": "Downpour",
+                    "5": "Intermittent Showers",
+                    "6": "Dark Clouds",
+                    "7": "Light Showers",
+                    "8": "Occasional Sunshine",
+                    "9": "Downpour",
+                    "10": "Heatwave",
+                    "11": "Clear Skies",
+                    "12": "Heavy Showers",
+                    "13": "Clear Skies",
+                    "14": "Heavy Showers",
+                    "15": "Downpour",
+                    "16": "Overcast",
+                    "17": "Downpour",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            }
+        }
+    },
+    "arid": {
+        "name": "Arid",
+        "description": "A dry climate with very little rainfall and high temperatures.",
+        "seasonOrder": [
+            "spring",
+            "summer",
+            "autumn",
+            "winter"
+        ],
+        "seasons": {
+            "spring": {
+                "name": "Spring",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Clear Skies",
+                    "3": "Overcast",
+                    "4": "Occasional Sunshine",
+                    "5": "Overcast",
+                    "6": "Intermittent Showers",
+                    "7": "Clear Skies",
+                    "8": "Clear Skies",
+                    "9": "Heatwave",
+                    "10": "Intermittent Showers",
+                    "11": "Light Showers",
+                    "12": "Heatwave",
+                    "13": "Dark Clouds",
+                    "14": "Heatwave",
+                    "15": "Heatwave",
+                    "16": "Heavy Showers",
+                    "17": "Heatwave",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "summer": {
+                "name": "Summer",
+                "states": {
+                    "1": "Heatwave",
+                    "2": "Heatwave",
+                    "3": "Clear Skies",
+                    "4": "Clear Skies",
+                    "5": "Clear Skies",
+                    "6": "Occasional Sunshine",
+                    "7": "Heatwave",
+                    "8": "Heatwave",
+                    "9": "Heatwave",
+                    "10": "Heatwave",
+                    "11": "Occasional Sunshine",
+                    "12": "Heatwave",
+                    "13": "Clear Skies",
+                    "14": "Heatwave",
+                    "15": "Heatwave",
+                    "16": "Intermittent Showers",
+                    "17": "Heatwave",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "autumn": {
+                "name": "Autumn",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Clear Skies",
+                    "3": "Overcast",
+                    "4": "Occasional Sunshine",
+                    "5": "Occasional Sunshine",
+                    "6": "Intermittent Showers",
+                    "7": "Heatwave",
+                    "8": "Clear Skies",
+                    "9": "Heatwave",
+                    "10": "Heatwave",
+                    "11": "Intermittent Showers",
+                    "12": "Heatwave",
+                    "13": "Intermittent Showers",
+                    "14": "Heatwave",
+                    "15": "Heatwave",
+                    "16": "Heavy Showers",
+                    "17": "Heatwave",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            },
+            "winter": {
+                "name": "Winter",
+                "states": {
+                    "1": "Clear Skies",
+                    "2": "Clear Skies",
+                    "3": "Overcast",
+                    "4": "Occasional Sunshine",
+                    "5": "Overcast",
+                    "6": "Intermittent Showers",
+                    "7": "Clear Skies",
+                    "8": "Dark Clouds",
+                    "9": "Clear Skies",
+                    "10": "Occasional Sunshine",
+                    "11": "Light Showers",
+                    "12": "Heatwave",
+                    "13": "Heavy Showers",
+                    "14": "Heatwave",
+                    "15": "Clear Skies",
+                    "16": "Downpour",
+                    "17": "Heatwave",
+                    "18": "Thunderstorm",
+                    "19": "Strange Phenomena"
+                }
+            }
+        }
+    }
+}

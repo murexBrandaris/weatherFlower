@@ -1,0 +1,39 @@
+# Weather Flower App Configuration
+
+# Default configuration
+server:
+  debug: true
+  host: "127.0.0.1"
+  port: 5000
+  threaded: true
+
+app:
+  default_climate: "cool"
+  default_season: "spring"
+
+logging:
+  level: "INFO"
+
+# Environment-specific overrides
+development:
+  server:
+    debug: true
+    port: 5000
+  logging:
+    level: "DEBUG"
+
+production:
+  server:
+    debug: false
+    host: "0.0.0.0"
+    port: 5000
+    threaded: true
+  logging:
+    level: "WARNING"
+
+testing:
+  server:
+    debug: true
+    port: 9000
+  logging:
+    level: "DEBUG"

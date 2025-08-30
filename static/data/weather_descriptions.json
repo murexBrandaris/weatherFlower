@@ -1,0 +1,80 @@
+{
+    "Blizzard": {
+        "description": "Heavy snow driven by fierce winds creates near-whiteout conditions.",
+        "travelTime": "Doubled",
+        "navigation": "Two instances of Disadvantage",
+        "exhaustion": "Two instances of Disadvantage",
+        "resting": "Shelter required"
+    },
+    "Clear Skies": {
+        "description": "Bright blue skies stretch endlessly overhead with excellent visibility.",
+        "navigation": "Advantage"
+    },
+    "Cold Snap": {
+        "description": "A sudden drop in temperature brings biting cold that penetrates to the bone.",
+        "travelTime": "Doubled",
+        "exhaustion": "Two instances of Disadvantage",
+        "resting": "Shelter required"
+    },
+    "Dark Clouds": {
+        "description": "Heavy storm clouds gather overhead, casting the landscape in shadow.",
+        "navigation": "Disadvantage"
+    },
+    "Downpour": {
+        "description": "Torrential rain falls in heavy sheets, turning paths muddy and treacherous.",
+        "travelTime": "Doubled",
+        "navigation": "Two instances of Disadvantage",
+        "exhaustion": "Disadvantage"
+    },
+    "Fog": {
+        "description": "Dense mist blankets the area, reducing visibility to mere paces ahead.",
+        "navigation": "Two instances of Disadvantage"
+    },
+    "Hail": {
+        "description": "Ice pellets fall from the sky with stinging force, you best seek shelter from their impact!",
+        "navigation": "Disadvantage",
+        "exhaustion": "Disadvantage",
+        "resting": "Shelter required"
+    },
+    "Heatwave": {
+        "description": "Oppressive heat beats down relentlessly, sapping energy with each step.",
+        "travelTime": "Doubled",
+        "exhaustion": "Two instances of Disadvantage",
+        "resting": "Drink twice as much to avoid thirst"
+    },
+    "Heavy Showers": {
+        "description": "Steady, soaking rain falls in persistent waves across the region.",
+        "navigation": "Disadvantage",
+        "exhaustion": "Disadvantage"
+    },
+    "Intermittent Showers": {
+        "description": "Sunshine alternates with brief, refreshing rain showers throughout the day."
+    },
+    "Light Showers": {
+        "description": "Gentle rain falls softly, bringing a fresh scent to the air.",
+        "exhaustion": "Disadvantage"
+    },
+    "Occasional Sunshine": {
+        "description": "Sunshine breaks through the clouds occasionally, providing brief moments of warmth."
+    },
+    "Overcast": {
+        "description": "Gray clouds cover most of the sky, filtering the sunlight to a dim glow."
+    },
+    "Snow": {
+        "description": "Steady snowfall blankets the ground, muffling sounds and slowing travel.",
+        "travelTime": "Doubled",
+        "navigation": "Disadvantage",
+        "exhaustion": "Disadvantage"
+    },
+    "Thunderstorm": {
+        "description": "Lightning flashes across dark skies while thunder rumbles ominously overhead.",
+        "travelTime": "Doubled",
+        "navigation": "Two instances of Disadvantage",
+        "exhaustion": "Disadvantage",
+        "resting": "Shelter required."
+    },
+    "Strange Phenomena": {
+        "description": "The natural order seems disturbed - lights dance in impossible colors across the sky, winds carry whispers from unknown sources, or the very air itself feels charged with otherworldly energy.",
+        "effects": "The GM should describe the specific phenomenon and determine its effects on travel and rest."
+    }
+}

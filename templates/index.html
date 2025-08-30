@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex Flower Weather App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-switch.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/infobar.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Theme Switch -->
+    <div class="theme-switch-wrapper">
+        <span class="theme-switch-label">Theme</span>
+        <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider">
+                <span class="light-icon"><i class="fas fa-sun"></i></span>
+                <span class="dark-icon"><i class="fas fa-moon"></i></span>
+            </span>
+        </label>
+    </div>
+    
+    <div class="climate-header-group">
+        <!-- Sidebar Toggle Button -->
+        <button id="sidebar-toggle" class="sidebar-toggle">
+            <i class="fas fa-sliders-h"></i> Climates & Seasons
+        </button>
+
+        <!-- Selected Climate & Season Header -->
+        <div id="selected-climate-season"></div>
+    </div>
+
+    <!-- Infobar Toggle Button -->
+    <button id="infobar-toggle" class="infobar-toggle" style="right: 20px; left: auto;">
+        <i class="fas fa-info-circle"></i>
+    </button>
+    
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h2>Climates & Seasons</h2>
+                <button id="close-sidebar" class="close-sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Climate</div>
+                <ul id="climate-list" class="climate-list">
+                    <!-- Climate items will be added here -->
+                </ul>
+                <p id="climate-description" class="climate-description"></p>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Season</div>
+                <ul id="season-list" class="season-list">
+                    <!-- Season items will be added here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    
+    <!-- Infobar -->
+    <div id="infobar" class="infobar">
+        <div class="infobar-content">
+            <div class="infobar-header">
+                <h2>Information</h2>
+                <button id="close-infobar" class="close-infobar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="info-content">
+                <!-- Information content will be added here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Infobar Overlay -->
+    <div id="infobar-overlay" class="infobar-overlay"></div>
+    <div class="container">
+        <h1>Leth's Weather Flowers</h1>
+        
+        <div class="hex-grid" id="hexGrid">
+            <!-- Hexagons will be added by JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <div class="button-group">
+                <button id="random">Random Transition</button>
+                <button id="reset">Reset</button>
+            </div>
+            <div class="toggle-group">
+                <label class="toggle-label">
+                    <span class="toggle-text">Show Mechanical Effects</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleEffects" checked>
+                        <span class="slider"></span>
+                    </label>
+                </label>
+            </div>
+        </div>
+        
+        <div class="status" id="status">
+            <span id="currentState">Loading...</span>
+            <p id="weatherDescription"></p>
+        </div>
+    </div>
+    
+    <script>
+        // Function to get the hex size directly from CSS variable
+        function getHexSize() {
+            const rootStyle = window.getComputedStyle(document.documentElement);
+            return parseInt(rootStyle.getPropertyValue('--hex-size'));
+        }
+        
+        // Function to get hex size from CSS and calculate positions
+        const calculateHexPositions = () => {
+            // Get hex size directly from CSS variable
+            const hexSize = getHexSize();
+            const hexWidth = hexSize;
+            const hexHeight = hexSize;
+            
+            // Calculate radius based on the hex size
+            const radius = hexWidth / 2;
+            
+            // Calculate apothem (distance from center to middle of side)
+            const apothem = Math.sqrt(3) * 0.5 * radius;
+            
+            // Spacing factor for margin between hexagons
+            const marginFactor = 1.1;
+            
+            // Calculate spacing for a regular hexagonal grid
+            const horizontalSpacing = 1.5 * radius * marginFactor;
+            const verticalSpacing = apothem * marginFactor;
+            
+            // Get the container dimensions to calculate center position
+            const hexGridElement = document.querySelector('.hex-grid');
+            
+            // Use CSS variable to calculate grid size if element is not yet rendered
+            let gridWidth, gridHeight;
+            
+            if (hexGridElement) {
+                const gridStyle = window.getComputedStyle(hexGridElement);
+                gridWidth = parseInt(gridStyle.width);
+                gridHeight = parseInt(gridStyle.height);
+            } else {
+                // Fallback to calculating from CSS variable
+                // Get the hex size from CSS variable
+                const rootStyle = window.getComputedStyle(document.documentElement);
+                const hexSize = parseInt(rootStyle.getPropertyValue('--hex-size'));
+                
+                // Calculate grid size based on hex size (matching CSS calc)
+                gridWidth = hexSize * 6;
+                gridHeight = hexSize * 6;
+            }
+            
+            // Center position based on grid dimensions
+            const centerX = gridWidth / 2;
+            const centerY = gridHeight / 2;
+            
+            return [
+                // Center
+                { id: 10, x: centerX, y: centerY },
+                
+                // Inner ring - 6 hexagons
+                { id: 13, x: centerX + horizontalSpacing, y: centerY - verticalSpacing },
+                { id: 8, x: centerX + horizontalSpacing, y: centerY + verticalSpacing },
+                { id: 5, x: centerX, y: centerY + 2 * verticalSpacing },
+                { id: 7, x: centerX - horizontalSpacing, y: centerY + verticalSpacing },
+                { id: 12, x: centerX - horizontalSpacing, y: centerY - verticalSpacing },
+                { id: 15, x: centerX, y: centerY - 2 * verticalSpacing },
+                
+                // Outer ring - 12 hexagons
+                { id: 16, x: centerX + 2 * horizontalSpacing, y: centerY - 2 * verticalSpacing },
+                { id: 11, x: centerX + 2 * horizontalSpacing, y: centerY },
+                { id: 6, x: centerX + 2 * horizontalSpacing, y: centerY + 2 * verticalSpacing },
+                { id: 3, x: centerX + horizontalSpacing, y: centerY + 3 * verticalSpacing },
+                { id: 1, x: centerX, y: centerY + 4 * verticalSpacing },
+                { id: 2, x: centerX - horizontalSpacing, y: centerY + 3 * verticalSpacing },
+                { id: 4, x: centerX - 2 * horizontalSpacing, y: centerY + 2 * verticalSpacing },
+                { id: 9, x: centerX - 2 * horizontalSpacing, y: centerY },
+                { id: 14, x: centerX - 2 * horizontalSpacing, y: centerY - 2 * verticalSpacing },
+                { id: 17, x: centerX - horizontalSpacing, y: centerY - 3 * verticalSpacing },
+                { id: 19, x: centerX, y: centerY - 4 * verticalSpacing },
+                { id: 18, x: centerX + horizontalSpacing, y: centerY - 3 * verticalSpacing }
+            ];
+        };
+        
+        // Hex positions will be calculated at runtime
+        let hexPositions = [];
+        
+        // Store state names
+        let stateNames = {};
+        
+        // Track whether to show mechanical effects
+        let showEffects = true;
+        
+        // Track debug mode
+        let debugMode = false;
+        
+        // Function to update the UI with the current state
+        function updateUI(data) {
+            const currentCell = data.cell;
+            const currentState = data.state;
+            
+            // Update status display
+            document.getElementById('currentState').innerHTML = `<b>${currentState}</b>: ${data.description}`;
+            
+            // Update weather effects display
+            const weatherDescriptionElement = document.getElementById('weatherDescription');
+            if (showEffects && data.effects && Object.keys(data.effects).length > 0) {
+                let effectsHTML = '<div class="weather-effects"><h4>Mechanical Effects:</h4><ul>';
+                for (const [key, value] of Object.entries(data.effects)) {
+                    const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                    effectsHTML += `<li><strong>${formattedKey}:</strong> ${value}</li>`;
+                }
+                effectsHTML += '</ul></div>';
+                weatherDescriptionElement.innerHTML = effectsHTML;
+            } else {
+                weatherDescriptionElement.innerHTML = '';
+            }
+            
+            // Update hex grid active state
+            document.querySelectorAll('.hex').forEach(hex => {
+                hex.classList.remove('active');
+            });
+            
+            document.querySelector(`.hex[data-id="${currentCell}"]`)?.classList.add('active');
+        }
+        
+        // Function to fetch current state from the server
+        async function fetchCurrentState() {
+            try {
+                const response = await fetch('/api/current-state');
+                const data = await response.json();
+                stateNames = data.states;
+                updateUI(data);
+                
+                // Update hex labels with state names
+                for (const id in stateNames) {
+                    const hexElement = document.querySelector(`.hex[data-id="${id}"]`);
+                    if (hexElement) {
+                        const hexLabel = hexElement.querySelector('.hex-content .hex-label');
+                        if (hexLabel) {
+                            hexLabel.textContent = stateNames[id];
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error fetching state:', error);
+            }
+        }
+        
+        // Function to make a random transition
+        async function makeTransition() {
+            try {
+                const response = await fetch('/api/transition', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    updateUI(data);
+                } else {
+                    console.error('Error during transition:', data.error);
+                }
+            } catch (error) {
+                console.error('Error making transition:', error);
+            }
+        }
+        
+        // Function to reset the hex flower
+        async function resetHexFlower() {
+            try {
+                const response = await fetch('/api/reset', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                updateUI(data);
+            } catch (error) {
+                console.error('Error resetting hex flower:', error);
+            }
+        }
+        
+        // Function to set the current cell
+        async function setCurrentCell(cellId) {
+            try {
+                const response = await fetch('/api/set-cell', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ cell: cellId })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    updateUI(data);
+                } else {
+                    console.error('Error setting cell:', data.error);
+                }
+            } catch (error) {
+                console.error('Error setting cell:', error);
+            }
+        }
+        
+        // Define the forbidden transitions that loop back
+        const forbiddenTransitions = [
+            { cell: 1, direction: 3 },  // From cell 1, direction 3 loops back to 1
+            { cell: 19, direction: 1 },  // From cell 19, direction 1 loops back to 19
+            { cell: 19, direction: 5 },  // From cell 19, direction 5 loops back to 19
+            { cell: 19, direction: 6 },   // From cell 19, direction 6 loops back to 19
+        ];
+        
+        // Function to update all existing loopback arrows when theme changes
+        function updateAllLoopbackArrows() {
+            const isDarkTheme = document.body.classList.contains('dark-theme');
+            const svgFile = isDarkTheme ? 'loopbackArrowDark.svg' : 'loopbackArrow.svg';
+            const svgPath = "{{ url_for('static', filename='icons/') }}" + svgFile;
+            
+            document.querySelectorAll('.loopback-arrow-object').forEach(obj => {
+                if (obj.getAttribute('data') !== svgPath) {
+                    obj.setAttribute('data', svgPath);
+                }
+            });
+        }
+        
+        // Function to create loopback arrow for a forbidden transition
+        function createLoopbackArrow(hexElement, direction) {
+            const arrowContainer = document.createElement('div');
+            arrowContainer.className = 'loopback-arrow';
+            arrowContainer.setAttribute('data-direction', direction);
+            
+            // Detect current theme and choose appropriate SVG
+            const isDarkTheme = document.body.classList.contains('dark-theme');
+            const svgFile = isDarkTheme ? 'loopbackArrowDark.svg' : 'loopbackArrow.svg';
+            
+            // Use object tag to embed the SVG
+            const svgObject = document.createElement('object');
+            svgObject.setAttribute('type', 'image/svg+xml');
+            svgObject.setAttribute('data', "{{ url_for('static', filename='icons/') }}" + svgFile);
+            svgObject.className = 'loopback-arrow-object';
+            
+            // Handle SVG load to ensure color inheritance
+            svgObject.onload = function() {
+                try {
+                    // Access the SVG document
+                    const svgDoc = svgObject.contentDocument;
+                    if (svgDoc && svgDoc.documentElement) {
+                        // Set the color property directly on SVG element
+                        svgDoc.documentElement.style.color = 'inherit';
+                    }
+                } catch(e) {
+                    console.error('Error setting SVG color:', e);
+                }
+            };
+            
+            // Add a fallback
+            svgObject.innerHTML = 'Your browser does not support SVG';
+            
+            arrowContainer.appendChild(svgObject);
+            return arrowContainer;
+        }
+        
+        // Initialize the hex grid
+        function initializeHexGrid() {
+            const hexGrid = document.getElementById('hexGrid');
+            
+            // Get hex size directly from CSS variable
+            const hexSize = getHexSize();
+            const hexWidth = hexSize;
+            const hexHeight = hexSize;
+            
+            // Create hexagons with proper centering
+            hexPositions.forEach(pos => {
+                const hex = document.createElement('div');
+                hex.className = 'hex';
+                hex.setAttribute('data-id', pos.id);
+                
+                // Position the hexagon centered at its calculated coordinates
+                hex.style.left = `${pos.x - hexWidth/2}px`;
+                hex.style.top = `${pos.y - hexHeight/2}px`;
+                
+                // Create inner hexagon (white background)
+                const innerHex = document.createElement('div');
+                innerHex.className = 'hex-inner';
+                
+                // Create content container
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'hex-content';
+                
+                // Add cell number only in debug mode
+                if (debugMode) {
+                    const numDiv = document.createElement('div');
+                    numDiv.className = 'hex-num';
+                    numDiv.textContent = pos.id;
+                    contentDiv.appendChild(numDiv);
+                }
+                
+                // Add state label (will be updated later)
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'hex-label';
+                labelDiv.textContent = '...';
+                
+                contentDiv.appendChild(labelDiv);
+                innerHex.appendChild(contentDiv);
+                hex.appendChild(innerHex);
+                
+                // Add loopback arrows for forbidden transitions
+                forbiddenTransitions.forEach(transition => {
+                    if (transition.cell == pos.id) {
+                        const arrow = createLoopbackArrow(hex, transition.direction);
+                        // Position the arrow at the same position as its hex
+                        arrow.style.left = hex.style.left;
+                        arrow.style.top = hex.style.top;
+                        // Add data-hex-id attribute for tracking relationship
+                        arrow.setAttribute('data-hex-id', pos.id);
+                        // Add to hexGrid instead of hex to avoid filter effects
+                        hexGrid.appendChild(arrow);
+                    }
+                });
+                
+                // Add click handler to set current cell
+                hex.addEventListener('click', () => {
+                    setCurrentCell(pos.id);
+                });
+                
+                hexGrid.appendChild(hex);
+            });
+        }
+        
+        // Function to recalculate positions and update the hex grid
+        function updateHexPositions() {
+            // Calculate new positions
+            hexPositions = calculateHexPositions();
+            
+            // Get hex size directly from CSS variable
+            const hexSize = getHexSize();
+            const hexWidth = hexSize;
+            const hexHeight = hexSize;
+            
+            // Update positions of existing hexagons with proper centering
+            hexPositions.forEach(pos => {
+                const hex = document.querySelector(`.hex[data-id="${pos.id}"]`);
+                if (hex) {
+                    hex.style.left = `${pos.x - hexWidth/2}px`;
+                    hex.style.top = `${pos.y - hexHeight/2}px`;
+                    
+                    // Also update any arrows associated with this hex
+                    const arrows = document.querySelectorAll(`.loopback-arrow[data-hex-id="${pos.id}"]`);
+                    arrows.forEach(arrow => {
+                        arrow.style.left = hex.style.left;
+                        arrow.style.top = hex.style.top;
+                    });
+                }
+            });
+        }
+
+        // Function to fetch debug information
+        async function fetchDebugInfo() {
+            try {
+                const response = await fetch('/api/debug-info');
+                const data = await response.json();
+                debugMode = data.debug;
+            } catch (error) {
+                console.error('Error fetching debug info:', error);
+                debugMode = false; // Default to false if error
+            }
+        }
+
+        // Set up event listeners
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Fetch debug info first
+            await fetchDebugInfo();
+            
+            // Calculate hexagon positions from CSS
+            hexPositions = calculateHexPositions();
+            
+            // Initialize hex grid
+            initializeHexGrid();
+            
+            // Fetch initial state
+            fetchCurrentState();
+            
+            // Add resize event listener to update positions when window size changes
+            window.addEventListener('resize', updateHexPositions);
+            
+            // Random transition button
+            const randomButton = document.getElementById('random');
+            if (randomButton) {
+                randomButton.addEventListener('click', () => {
+                    makeTransition();
+                });
+            }
+            
+            // Reset button
+            document.getElementById('reset').addEventListener('click', () => {
+                resetHexFlower();
+            });
+            
+            // Toggle effects checkbox
+            document.getElementById('toggleEffects').addEventListener('change', (e) => {
+                showEffects = e.target.checked;
+                // Refresh the current display
+                fetchCurrentState();
+            });
+        });
+    </script>
+    
+    <!-- SVG filter for rounded corners effect -->
+    <svg style="visibility: hidden; position: absolute;" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />    
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+                <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+            </filter>
+        </defs>
+    </svg>
+    
+    <!-- Script to update SVG filter based on CSS variables -->
+    <script src="{{ url_for('static', filename='js/hex-filter.js') }}"></script>
+    <!-- Script for theme switching -->
+    <script src="{{ url_for('static', filename='js/theme-switch.js') }}"></script>
+    <!-- Script for sidebar functionality -->
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+    <!-- Script for infobar functionality -->
+    <script src="{{ url_for('static', filename='js/infobar.js') }}"></script>
+    <script>
+    // Listen for theme toggle and update loopback arrows
+    document.addEventListener('DOMContentLoaded', function() {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('change', function() {
+                // Wait for body class to update (theme-switch.js)
+                setTimeout(updateAllLoopbackArrows, 50);
+            });
+        }
+        // Also update on page load
+        updateLoopbackArrowSVGs();
+    });
+    </script>
+</body>
+</html>
