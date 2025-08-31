@@ -1,11 +1,11 @@
 :root {
     /* Size and layout variables */
-    --hex-size: 140px; /* Single variable to control hexagon size */
+    --hex-size: min(140px, 12vw, 12vh); /* Responsive hexagon size */
     --hex-outline-size: 4px; /* Variable to control the outline thickness */
     --hex-corner-radius: 2.25; /* Variable to control the corner roundness (for blur filter) */
     --hex-num-font-size: calc(var(--hex-size) * 0.08); /* Smaller font size for numbers (for debugging) */
     --hex-label-font-size: calc(var(--hex-size) * 0.12); /* Larger font size for labels */
-    --loopback-arrow-size: 45px; /* Size for loopback arrows */
+    --loopback-arrow-size: calc(var(--hex-size) * 0.33); /* Size for loopback arrows */
     
     /* Light theme colors (default) */
     --bg-color: #f0f2f5;
@@ -65,6 +65,13 @@
     --sidebar-item-hover-bg: #0c2626;
     --sidebar-item-active-bg: #062828;
     --sidebar-item-active-text: #00db9d;
+}
+
+/* Responsive hexagon size */
+@media (max-width: 768px) {
+    :root {
+        --hex-size: min(60px, 18vw, 18vh);
+    }
 }
 
 body {

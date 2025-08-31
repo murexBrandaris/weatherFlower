@@ -119,7 +119,22 @@
         // Function to get the hex size directly from CSS variable
         function getHexSize() {
             const rootStyle = window.getComputedStyle(document.documentElement);
-            return parseInt(rootStyle.getPropertyValue('--hex-size'));
+            const hexSizeValue = rootStyle.getPropertyValue('--hex-size');
+            
+            // If the CSS variable contains a min() function, we need to get the computed value
+            // Create a temporary element to get the computed value
+            const tempDiv = document.createElement('div');
+            tempDiv.style.width = hexSizeValue;
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.visibility = 'hidden';
+            document.body.appendChild(tempDiv);
+            
+            const computedWidth = window.getComputedStyle(tempDiv).width;
+            const hexSize = parseInt(computedWidth);
+            
+            document.body.removeChild(tempDiv);
+            
+            return hexSize;
         }
         
         // Function to get hex size from CSS and calculate positions
@@ -167,7 +182,7 @@
             const centerX = gridWidth / 2;
             const centerY = gridHeight / 2;
             
-            return [
+            const positions = [
                 // Center
                 { id: 10, x: centerX, y: centerY },
                 
@@ -193,6 +208,8 @@
                 { id: 19, x: centerX, y: centerY - 4 * verticalSpacing },
                 { id: 18, x: centerX + horizontalSpacing, y: centerY - 3 * verticalSpacing }
             ];
+            
+            return positions;
         };
         
         // Hex positions will be calculated at runtime
@@ -392,8 +409,10 @@
                 hex.setAttribute('data-id', pos.id);
                 
                 // Position the hexagon centered at its calculated coordinates
-                hex.style.left = `${pos.x - hexWidth/2}px`;
-                hex.style.top = `${pos.y - hexHeight/2}px`;
+                const leftPos = pos.x - hexWidth/2;
+                const topPos = pos.y - hexHeight/2;
+                hex.style.left = `${leftPos}px`;
+                hex.style.top = `${topPos}px`;
                 
                 // Create inner hexagon (white background)
                 const innerHex = document.createElement('div');
@@ -445,29 +464,66 @@
         
         // Function to recalculate positions and update the hex grid
         function updateHexPositions() {
-            // Calculate new positions
-            hexPositions = calculateHexPositions();
-            
-            // Get hex size directly from CSS variable
-            const hexSize = getHexSize();
-            const hexWidth = hexSize;
-            const hexHeight = hexSize;
-            
-            // Update positions of existing hexagons with proper centering
-            hexPositions.forEach(pos => {
-                const hex = document.querySelector(`.hex[data-id="${pos.id}"]`);
-                if (hex) {
-                    hex.style.left = `${pos.x - hexWidth/2}px`;
-                    hex.style.top = `${pos.y - hexHeight/2}px`;
-                    
-                    // Also update any arrows associated with this hex
-                    const arrows = document.querySelectorAll(`.loopback-arrow[data-hex-id="${pos.id}"]`);
-                    arrows.forEach(arrow => {
-                        arrow.style.left = hex.style.left;
-                        arrow.style.top = hex.style.top;
-                    });
+            // Small delay to ensure CSS variables have been updated
+            setTimeout(() => {
+                // Calculate new positions
+                hexPositions = calculateHexPositions();
+                
+                // Get hex size directly from CSS variable
+                const hexSize = getHexSize();
+                const hexWidth = hexSize;
+                const hexHeight = hexSize;
+                
+                // Update positions of existing hexagons with proper centering
+                hexPositions.forEach(pos => {
+                    const hex = document.querySelector(`.hex[data-id="${pos.id}"]`);
+                    if (hex) {
+                        hex.style.left = `${pos.x - hexWidth/2}px`;
+                        hex.style.top = `${pos.y - hexHeight/2}px`;
+                        
+                        // Also update any arrows associated with this hex
+                        const arrows = document.querySelectorAll(`.loopback-arrow[data-hex-id="${pos.id}"]`);
+                        arrows.forEach(arrow => {
+                            arrow.style.left = hex.style.left;
+                            arrow.style.top = hex.style.top;
+                        });
+                    }
+                });
+            }, 10);
+        }
+
+        // Dynamic responsive hex size adjustment (enhancement layer)
+        function updateHexSizeForMobile() {
+            // Only apply dynamic scaling on smaller screens where CSS alone isn't perfect
+            if (window.innerWidth <= 768) {
+                // Calculate responsive size: 15% of screen width, with bounds
+                const dynamicSize = Math.max(40, Math.min(80, window.innerWidth * 0.15));
+                
+                // Only update if significantly different from current size to avoid constant updates
+                const currentSize = parseInt(getComputedStyle(document.documentElement)
+                    .getPropertyValue('--hex-size'));
+                
+                if (Math.abs(dynamicSize - currentSize) > 5) {
+                    document.documentElement.style.setProperty('--hex-size', `${dynamicSize}px`);
+                    // Update positions after changing the size
+                    updateHexPositions();
                 }
-            });
+            } else {
+                // On desktop, let CSS handle it completely - remove any JS overrides
+                document.documentElement.style.removeProperty('--hex-size');
+                // Update positions after potentially changing the size
+                updateHexPositions();
+            }
+        }
+
+        // Debounced version to avoid excessive calls during resize
+        let resizeTimeout;
+        function debouncedHexUpdate() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                updateHexSizeForMobile();
+                // updateHexPositions() is already called within updateHexSizeForMobile()
+            }, 100);
         }
 
         // Function to fetch debug information
@@ -496,8 +552,8 @@
             // Fetch initial state
             fetchCurrentState();
             
-            // Add resize event listener to update positions when window size changes
-            window.addEventListener('resize', updateHexPositions);
+            // Add resize event listener to update hex sizing and positions
+            window.addEventListener('resize', debouncedHexUpdate);
             
             // Random transition button
             const randomButton = document.getElementById('random');
@@ -518,6 +574,14 @@
                 // Refresh the current display
                 fetchCurrentState();
             });
+        });
+
+        // Apply dynamic scaling on key events
+        window.addEventListener('load', updateHexSizeForMobile);
+        window.addEventListener('resize', debouncedHexUpdate);
+        window.addEventListener('orientationchange', () => {
+            // Small delay for orientation change to complete
+            setTimeout(updateHexSizeForMobile, 200);
         });
     </script>
     
