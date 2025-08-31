@@ -294,8 +294,12 @@ def get_debug_info():
     return jsonify({"debug": config["server"]["debug"], "environment": args.env})
 
 
+# Application factory pattern - expose app for WSGI servers
+# For local development, use dev_server.py instead
 if __name__ == "__main__":
-    # Use configuration for server settings
+    print("For local development, use: python dev_server.py")
+    print("For production, this app runs with Gunicorn via Docker")
+    print("Starting basic server for testing...")
     app.run(
         debug=config["server"]["debug"],
         host=config["server"]["host"],
