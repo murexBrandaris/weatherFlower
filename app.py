@@ -68,8 +68,23 @@ def load_config(configFile="config.yaml", environment=None):
 
 
 # Parse command line arguments and load configuration
-args = parse_args()
-config = load_config(configFile=args.config, environment=args.env)
+# Only parse args when running directly, not when imported by WSGI servers
+if __name__ == "__main__":
+    args = parse_args()
+    config = load_config(configFile=args.config, environment=args.env)
+else:
+    # When imported by Gunicorn/WSGI, use environment variables or defaults
+    env = os.environ.get("FLASK_ENV", "production")
+    configFile = os.environ.get("FLASK_CONFIG", "config.yaml")
+    config = load_config(configFile=configFile, environment=env)
+
+    # Create a simple args object for compatibility
+    class Args:
+        def __init__(self, env):
+            self.env = env
+            self.config = configFile
+
+    args = Args(env)
 
 app = Flask(__name__)
 
