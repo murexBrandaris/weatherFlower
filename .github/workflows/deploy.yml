@@ -2,9 +2,9 @@ name: Deploy to Azure Container Apps
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches: 
+      - main
+      - master
   workflow_dispatch:
 
 env:
@@ -18,6 +18,17 @@ jobs:
       contents: read
 
     steps:
+    - name: Verify branch
+      run: |
+        echo "Triggered by branch: ${{ github.ref_name }}"
+        echo "Event name: ${{ github.event_name }}"
+        if [[ "${{ github.ref_name }}" != "main" && "${{ github.ref_name }}" != "master" ]]; then
+          echo "❌ This workflow should only run on main/master branches"
+          echo "Current branch: ${{ github.ref_name }}"
+          exit 1
+        fi
+        echo "✅ Branch check passed: ${{ github.ref_name }}"
+
     - name: Checkout repository
       uses: actions/checkout@v4
 
