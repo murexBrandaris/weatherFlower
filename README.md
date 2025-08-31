@@ -23,7 +23,10 @@ cd weatherFlower
 # Install dependencies
 pip install -r requirements.txt
 
-# Run in development mode
+# Run in development mode (recommended)
+python dev_server.py --env development
+
+# Or run the app directly (not recommended for development)
 python app.py --env development
 ```
 
@@ -98,9 +101,3 @@ weatherFlower/
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Inspired by hex flower mechanics in tabletop RPGs
-- Built with Flask and modern web technologies
-- Designed for the RPG community
