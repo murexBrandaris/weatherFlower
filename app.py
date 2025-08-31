@@ -241,12 +241,11 @@ def get_seasons():
     seasons, order = get_season_names(climate)
 
     # Get user's current selections
-    userClimate = session.get("hexFlowerState", {}).get("climate", defaultClimate)
     userSeason = session.get("hexFlowerState", {}).get("season", defaultSeason)
 
     # Return user's current season if they're looking at their current climate,
     # otherwise return the first season for the requested climate
-    if climate == userClimate:
+    if userSeason in order:
         selectedSeason = userSeason
     else:
         # Return the first season in the order, or first available season
