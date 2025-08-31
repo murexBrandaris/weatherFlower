@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             // Select default climate if available
-            if (data.default_climate && Object.keys(data.climates).includes(data.default_climate)) {
-                selectClimate(data.default_climate);
+            if (data.defaultClimate && Object.keys(data.climates).includes(data.defaultClimate)) {
+                selectClimate(data.defaultClimate);
             }
         } catch (error) {
             console.error('Error fetching climates:', error);
@@ -122,8 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Select default season if available
-            if (data.default_season && Object.keys(data.seasons).includes(data.default_season)) {
-                selectSeason(climateKey, data.default_season);
+            if (data.selectedSeason && Object.keys(data.seasons).includes(data.selectedSeason)) {
+                selectSeason(climateKey, data.selectedSeason);
             } else if (Object.keys(data.seasons).length > 0) {
                 selectSeason(climateKey, Object.keys(data.seasons)[0]);
             }

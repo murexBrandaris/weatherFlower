@@ -31,31 +31,31 @@ def parse_args():
     return parser.parse_args()
 
 
-def load_config(config_file="config.yaml", environment=None):
+def load_config(configFile="config.yaml", environment=None):
     """Load YAML configuration with environment-specific overrides"""
     # Set default configuration
-    default_config = {
+    defaultConfig = {
         "server": {"debug": True, "host": "127.0.0.1", "port": 5000, "threaded": True},
-        "app": {"default_climate": "cool", "default_season": "spring"},
+        "app": {"defaultClimate": "cool", "defaultSeason": "spring"},
         "logging": {"level": "INFO"},
     }
 
     try:
-        if os.path.exists(config_file):
-            with open(config_file, "r") as f:
+        if os.path.exists(configFile):
+            with open(configFile, "r") as f:
                 config = yaml.safe_load(f)
 
             # Merge with defaults
-            for section, values in default_config.items():
+            for section, values in defaultConfig.items():
                 if section not in config:
                     config[section] = {}
-                for key, default_value in values.items():
-                    config[section].setdefault(key, default_value)
+                for key, defaultValue in values.items():
+                    config[section].setdefault(key, defaultValue)
 
             # Apply environment-specific overrides
             if environment and environment in config:
-                env_config = config[environment]
-                for section, values in env_config.items():
+                envConfig = config[environment]
+                for section, values in envConfig.items():
                     if section in config:
                         config[section].update(values)
 
@@ -64,23 +64,23 @@ def load_config(config_file="config.yaml", environment=None):
         print(f"Error loading config file: {e}")
         print("Using default configuration...")
 
-    return default_config
+    return defaultConfig
 
 
 # Parse command line arguments and load configuration
 args = parse_args()
-config = load_config(config_file=args.config, environment=args.env)
+config = load_config(configFile=args.config, environment=args.env)
 
 app = Flask(__name__)
 
 # Configure sessions with environment variable fallback
-app.secret_key = os.environ.get('FLASK_SECRET_KEY') or config.get("app", {}).get(
-    "secret_key", "dev-fallback-key-not-secure"
+app.secret_key = os.environ.get("FLASK_SECRET_KEY") or config.get("app", {}).get(
+    "secretKey", "dev-fallback-key-not-secure"
 )
 
 ## Set default climate and season from config
-defaultClimate = config["app"]["default_climate"]
-defaultSeason = config["app"]["default_season"]
+defaultClimate = config["app"]["defaultClimate"]
+defaultSeason = config["app"]["defaultSeason"]
 
 # Get the default states from the climate data
 defaultStates = get_states(defaultClimate, defaultSeason)
@@ -220,23 +220,47 @@ def set_cell():
 @app.route("/api/climates", methods=["GET"])
 def get_climates():
     """Return available climates"""
-    return jsonify({"climates": get_climate_names(), "default_climate": currentClimate})
+    # Get user's current climate or global default
+    user_climate = session.get("hexFlowerState", {}).get("climate", defaultClimate)
+    return jsonify({"climates": get_climate_names(), "defaultClimate": user_climate})
 
 
 @app.route("/api/seasons", methods=["GET"])
 def get_seasons():
     """Return available seasons for a climate"""
-    climate = request.args.get("climate", currentClimate)
+    # Get climate from query parameter or user's session
+    climate = request.args.get("climate")
+    if not climate:
+        # Fallback to user's session or global default
+        user_climate = session.get("hexFlowerState", {}).get("climate", defaultClimate)
+        climate = user_climate
 
     # Get the climate description if it exists
     description = get_climate_description(climate)
 
     seasons, order = get_season_names(climate)
 
+    # Get user's current selections
+    userClimate = session.get("hexFlowerState", {}).get("climate", defaultClimate)
+    userSeason = session.get("hexFlowerState", {}).get("season", defaultSeason)
+
+    # Return user's current season if they're looking at their current climate,
+    # otherwise return the first season for the requested climate
+    if climate == userClimate:
+        selectedSeason = userSeason
+    else:
+        # Return the first season in the order, or first available season
+        if order and len(order) > 0:
+            selectedSeason = order[0]
+        elif seasons and len(seasons) > 0:
+            selectedSeason = next(iter(seasons.keys()))
+        else:
+            selectedSeason = ""
+
     return jsonify(
         {
             "seasons": seasons,
-            "default_season": currentSeason if climate == currentClimate else "",
+            "selectedSeason": selectedSeason,
             "description": description,
             "seasonOrder": order,
         }
@@ -246,8 +270,6 @@ def get_seasons():
 @app.route("/api/set-weather", methods=["POST"])
 def set_weather():
     """Set the weather system to a specific climate and season"""
-    global currentClimate, currentSeason
-
     data = request.json
     climate = data.get("climate")
     season = data.get("season")

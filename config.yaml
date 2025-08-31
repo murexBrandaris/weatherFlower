@@ -8,10 +8,10 @@ server:
   threaded: true
 
 app:
-  default_climate: "cool"
-  default_season: "spring"
+  defaultClimate: "cool"
+  defaultSeason: "spring"
   # Generate a new secret key for production: python -c "import secrets; print(secrets.token_hex(32))"
-  secret_key: "dev-key-not-for-production-use"
+  secretKey: "dev-key-not-for-production-use"
 
 logging:
   level: "INFO"
