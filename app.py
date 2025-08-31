@@ -1,7 +1,7 @@
 import os
 import yaml
 import argparse
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, session
 from hex_flower import hexFlower
 from data_readers import (
     get_climate_names,
@@ -73,6 +73,11 @@ config = load_config(config_file=args.config, environment=args.env)
 
 app = Flask(__name__)
 
+# Configure sessions with environment variable fallback
+app.secret_key = os.environ.get('FLASK_SECRET_KEY') or config.get("app", {}).get(
+    "secret_key", "dev-fallback-key-not-secure"
+)
+
 ## Set default climate and season from config
 defaultClimate = config["app"]["default_climate"]
 defaultSeason = config["app"]["default_season"]
@@ -80,12 +85,36 @@ defaultSeason = config["app"]["default_season"]
 # Get the default states from the climate data
 defaultStates = get_states(defaultClimate, defaultSeason)
 
-# Create a global instance of hexFlower
-hexFlowerInst = hexFlower(defaultStates)
 
-# Track current climate and season
-currentClimate = defaultClimate
-currentSeason = defaultSeason
+def get_user_hex_flower():
+    """Get or create a hex flower instance for the current user session"""
+    if "hexFlowerState" not in session:
+        # Create new instance for this user
+        session["hexFlowerState"] = {
+            "currentCell": 1,  # Default starting position
+            "climate": defaultClimate,
+            "season": defaultSeason,
+        }
+
+    # Get current states based on user's climate/season
+    userClimate = session["hexFlowerState"].get("climate", defaultClimate)
+    userSeason = session["hexFlowerState"].get("season", defaultSeason)
+    states = get_states(userClimate, userSeason)
+
+    # Create hex flower instance with user's current state
+    hexFlowerInst = hexFlower(states)
+    hexFlowerInst.set_current_cell(session["hexFlowerState"]["currentCell"])
+
+    return hexFlowerInst
+
+
+def save_user_hex_flower_state(hexFlowerInstance):
+    """Save the hex flower state to the user session"""
+    if "hexFlowerState" not in session:
+        session["hexFlowerState"] = {}
+
+    session["hexFlowerState"]["currentCell"] = hexFlowerInstance.get_current_cell()
+    session.modified = True
 
 
 @app.route("/")
@@ -97,14 +126,15 @@ def index():
 @app.route("/api/current-state", methods=["GET"])
 def get_current_state():
     """Return the current state of the hex flower"""
-    current_state = hexFlowerInst.get_current_state()
-    description = get_weather_description(current_state)
-    effects = get_weather_effects(current_state)
+    hexFlowerInst = get_user_hex_flower()
+    currentState = hexFlowerInst.get_current_state()
+    description = get_weather_description(currentState)
+    effects = get_weather_effects(currentState)
 
     return jsonify(
         {
             "cell": hexFlowerInst.get_current_cell(),
-            "state": current_state,
+            "state": currentState,
             "description": description,
             "effects": effects,
             "states": hexFlowerInst.states,
@@ -115,16 +145,20 @@ def get_current_state():
 @app.route("/api/transition", methods=["POST"])
 def make_transition():
     """Make a transition"""
+    hexFlowerInst = get_user_hex_flower()
     # Random transition
     direction = hexFlowerInst.random_transition()
-    current_state = hexFlowerInst.get_current_state()
-    description = get_weather_description(current_state)
-    effects = get_weather_effects(current_state)
+    currentState = hexFlowerInst.get_current_state()
+    description = get_weather_description(currentState)
+    effects = get_weather_effects(currentState)
+
+    # Save the updated state
+    save_user_hex_flower_state(hexFlowerInst)
 
     return jsonify(
         {
             "cell": hexFlowerInst.get_current_cell(),
-            "state": current_state,
+            "state": currentState,
             "direction": direction,
             "description": description,
             "effects": effects,
@@ -135,14 +169,19 @@ def make_transition():
 @app.route("/api/reset", methods=["POST"])
 def reset_state():
     """Reset the hex flower to its default state"""
+    hexFlowerInst = get_user_hex_flower()
     hexFlowerInst.reset()
-    current_state = hexFlowerInst.get_current_state()
-    description = get_weather_description(current_state)
-    effects = get_weather_effects(current_state)
+    currentState = hexFlowerInst.get_current_state()
+    description = get_weather_description(currentState)
+    effects = get_weather_effects(currentState)
+
+    # Save the updated state
+    save_user_hex_flower_state(hexFlowerInst)
+
     return jsonify(
         {
             "cell": hexFlowerInst.get_current_cell(),
-            "state": current_state,
+            "state": currentState,
             "description": description,
             "effects": effects,
         }
@@ -158,9 +197,14 @@ def set_cell():
 
     try:
         cellId = int(data["cell"])
+        hexFlowerInst = get_user_hex_flower()
         state = hexFlowerInst.set_current_cell(cellId)
         description = get_weather_description(state)
         effects = get_weather_effects(state)
+
+        # Save the updated state
+        save_user_hex_flower_state(hexFlowerInst)
+
         return jsonify(
             {
                 "cell": cellId,
@@ -211,16 +255,14 @@ def set_weather():
     if not climate or not season:
         return jsonify({"success": False, "error": "Climate and season required"})
 
-    # Get weather states for the selected climate and season
-    weatherStates = get_states(climate, season)
+    # Update the user's session with new climate/season
+    if "hexFlowerState" not in session:
+        session["hexFlowerState"] = {}
 
-    # Update the hex flower with new states
-    hexFlowerInst.set_states(weatherStates)
-    hexFlowerInst.reset()  # Reset to initial state (usually center)
-
-    # Update current selections
-    currentClimate = climate
-    currentSeason = season
+    session["hexFlowerState"]["climate"] = climate
+    session["hexFlowerState"]["season"] = season
+    session["hexFlowerState"]["currentCell"] = 1  # Reset to starting position
+    session.modified = True
 
     return jsonify({"success": True})
 

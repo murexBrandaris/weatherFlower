@@ -60,4 +60,5 @@ jobs:
           --name ${{ secrets.AZURE_CONTAINER_APP_NAME }} \
           --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
           --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-          --revision-suffix ${{ steps.revision.outputs.suffix }}
+          --revision-suffix ${{ steps.revision.outputs.suffix }} \
+          --set-env-vars FLASK_SECRET_KEY=${{ secrets.FLASK_SECRET_KEY }}
