@@ -68,17 +68,6 @@ docker build -t weather-flower-app .
 # Run container
 docker run -p 5000:5000 weather-flower-app
 ```
-
-### Azure Container Apps
-```bash
-# Deploy to Azure (requires Azure CLI)
-az containerapp up \
-  --source . \
-  --name weather-flower-app \
-  --resource-group your-rg \
-  --location eastus
-```
-
 ## Project Structure
 
 ```
