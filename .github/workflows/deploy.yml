@@ -43,10 +43,21 @@ jobs:
         docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
         docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
+    - name: Create short revision suffix
+      id: revision
+      run: |
+        # Create a short revision suffix (first 8 chars of SHA + timestamp)
+        SHORT_SHA="${{ github.sha }}"
+        SHORT_SHA="${SHORT_SHA:0:8}"
+        TIMESTAMP=$(date +%m%d%H%M)
+        REVISION_SUFFIX="rev-${SHORT_SHA}-${TIMESTAMP}"
+        echo "suffix=${REVISION_SUFFIX}" >> $GITHUB_OUTPUT
+        echo "Created revision suffix: ${REVISION_SUFFIX}"
+
     - name: Deploy to Azure Container Apps
       run: |
         az containerapp update \
           --name ${{ secrets.AZURE_CONTAINER_APP_NAME }} \
           --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
           --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-          --revision-suffix ${{ github.sha }}
+          --revision-suffix ${{ steps.revision.outputs.suffix }}
